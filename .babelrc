@@ -1,0 +1,14 @@
+{
+  "presets": [
+    "@babel/preset-env",
+    "minify"
+  ],
+  "plugins": [
+    "@babel/plugin-proposal-class-properties",
+    "@babel/plugin-proposal-private-methods"
+  ],
+  "only": [
+    "./src/Melba.js"
+  ]
+}
+

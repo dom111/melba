@@ -1,0 +1,126 @@
+<link rel="stylesheet" href="../dist/Melba-min.css"/>
+
+<h2>To use:</h2>
+
+<pre><code lang="sh">
+  yarn add melba
+</code></pre>
+
+then:
+
+<pre><code lang="javascript">
+  import Toast from 'melba';
+
+  // ...
+
+  new Toast({
+    content: 'File uploaded successfully.',
+    type: 'success'
+  });
+</code></pre>
+
+<ul>
+  <li>
+    <button class="success">
+      Test a success toast
+    </button>
+  </li>
+  <li>
+    <button class="error">
+      Test an error toast
+    </button>
+  </li>
+  <li>
+    <button class="warning">
+      Test an warning toast
+    </button>
+  </li>
+  <li>
+    <button class="info">
+      Test an info toast
+    </button>
+  </li>
+  <li>
+    <button class="success autohide">
+      Test an auto-hiding success toast
+    </button>
+  </li>
+  <li>
+    <button class="event-example">
+      Test a toast with events for mouseover, mouseout and click
+    </button>
+  </li>
+</ul>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+      document.querySelector('button.success').addEventListener('click', function() {
+          new Melba({
+              content: 'Looks like it worked!',
+              type: 'success'
+          });
+      });
+
+      document.querySelector('button.error').addEventListener('click', function() {
+          new Melba({
+              content: 'Oh no! Something went wrong...',
+              type: 'error'
+          });
+      });
+
+      document.querySelector('button.warning').addEventListener('click', function() {
+          new Melba({
+              content: 'That\'s not what I expected.',
+              type: 'warning'
+          });
+      });
+
+      document.querySelector('button.info').addEventListener('click', function() {
+          new Melba({
+              content: 'Some information for you.'
+          });
+      });
+
+      document.querySelector('button.autohide.success').addEventListener('click', function() {
+          new Melba({
+              content: 'This will hide after 5 seconds.',
+              type: 'success',
+              hide: 5
+          });
+      });
+
+      document.querySelector('button.event-example').addEventListener('click', function() {
+          new Melba({
+              content: 'Hover to change class and click to spawn a new toast.',
+              type: 'success',
+              toastEvents: ['mouseover', 'mouseout', 'click'],
+              events: {
+                  mouseover: [function(toast, element) {
+                    element.classList.add('toast--warning');
+                  }],
+                  mouseout: [function(toast, element) {
+                    element.classList.remove('toast--warning');
+                  }],
+                  click: [function(){
+                      new Melba({content: 'You clicked the toast!', hide: 5});
+                  }]
+              }
+          });
+          // Alternatively:
+          // var instance = new Melba({
+          //   ...
+          //   toastEvents: ['click', ...]
+          // });
+          // instance.on('click', function(instance, element, event) {
+          //   ...
+          // });
+      });
+  });
+</script>
+<script src="../dist/Melba-min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/css-vars-ponyfill@2.1.2/dist/css-vars-ponyfill.min.js"></script>
+<script type="text/javascript">
+  if (!(window.CSS && CSS.supports('color', 'var(--fake-var)'))) {
+    cssVars();
+  }
+</script>
