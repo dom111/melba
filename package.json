@@ -1,7 +1,13 @@
 {
-  "name": "melba",
-  "version": "0.1.0",
-  "description": "lightweight VanillaJS toast library.",
+  "name": "melba-toast",
+  "description": "Lightweight VanillaJS toast library.",
+  "version": "0.2.0",
+  "main": "dist/cjs/Melba.js",
+  "module": "dist/esm/Melba.js",
+  "style": "dist/css/Melba-min.css",
+  "files": [
+    "build/**/*"
+  ],
   "repository": {
     "type": "git",
     "url": "git@github.com:dom111/melba.git"
@@ -13,27 +19,30 @@
   ],
   "author": "Dom Hastings",
   "license": "MIT",
-  "main": "dist/Melba-min.js",
-  "style": "dist/Melba-min.css",
   "scripts": {
-    "build": "yarn webpack"
+    "build": "npm run build:cjs && npm run build:esm",
+    "build:esm": "cross-env BABEL_ENV=esm babel src --out-dir dist/esm/ --ignore \"src/**/*.test.js\"",
+    "build:cjs": "cross-env BABEL_ENV=cjs babel src --out-dir dist/cjs/ --ignore \"src/**/*.test.js\"",
+    "build:css": "node-sass --output-style=compressed src/Melba.scss -o dist/css/",
+    "lint": "eslint src"
   },
   "devDependencies": {
+    "@babel/cli": "^7.6.3",
     "@babel/core": "^7.6.2",
     "@babel/plugin-proposal-class-properties": "^7.5.5",
     "@babel/plugin-proposal-private-methods": "^7.6.0",
+    "@babel/plugin-transform-runtime": "^7.6.2",
     "@babel/preset-env": "^7.6.2",
+    "@babel/preset-flow": "^7.0.0",
+    "babel-core": "^6.26.3",
     "babel-eslint": "^10.0.3",
-    "babel-loader": "^8.0.6",
     "babel-preset-minify": "^0.5.1",
-    "css-loader": "^3.2.0",
+    "cross-env": "^6.0.3",
     "eslint": "^6.5.1",
-    "mini-css-extract-plugin": "^0.8.0",
     "node-sass": "^4.12.0",
-    "optimize-css-assets-webpack-plugin": "^5.0.3",
-    "sass-loader": "^8.0.0",
-    "terser": "^4.3",
-    "webpack": "^4.41.0",
-    "webpack-cli": "^3.3.9"
+    "terser": "^4.3.8"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.6.3"
   }
 }

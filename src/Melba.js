@@ -301,7 +301,7 @@ export default class Melba {
   }
 
   trigger(event, ...args) {
-    (this.#events[event] || []).forEach((callable) => callable(this, this.#element, ...args))
+    (this.#events[event] || []).forEach((callable) => callable(this, this.#element, ...args));
   }
 
   /**

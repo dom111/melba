@@ -10,11 +10,14 @@ module.exports = {
     }
   },
   entry: [
-    path.resolve(__dirname, 'build/Melba.js')
+    path.resolve(__dirname, 'src/Melba.js'),
+    path.resolve(__dirname, 'src/Melba.scss')
   ],
   output: {
+    path: path.resolve(__dirname, 'dist'),
     filename: 'Melba-min.js',
-    path: path.resolve(__dirname, 'dist')
+    library: 'Melba',
+    libraryTarget: 'umd2' // exposes and know when to use module.exports or exports.
   },
   plugins: [
     new MiniCssExtractPlugin({
