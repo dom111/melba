@@ -1,7 +1,7 @@
 {
   "name": "melba-toast",
   "description": "Lightweight VanillaJS toast library.",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "main": "dist/cjs/Melba.js",
   "module": "dist/esm/Melba.js",
   "style": "dist/css/Melba-min.css",
@@ -20,7 +20,7 @@
   "author": "Dom Hastings",
   "license": "MIT",
   "scripts": {
-    "build": "npm run build:cjs && npm run build:esm",
+    "build": "npm run build:css && npm run build:cjs && npm run build:esm",
     "build:esm": "cross-env BABEL_ENV=esm babel src --out-dir dist/esm/ --ignore \"src/**/*.test.js\"",
     "build:cjs": "cross-env BABEL_ENV=cjs babel src --out-dir dist/cjs/ --ignore \"src/**/*.test.js\"",
     "build:css": "node-sass --output-style=compressed src/Melba.scss -o dist/css/",
