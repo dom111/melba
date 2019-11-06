@@ -14,6 +14,7 @@
   --theme-color: rgba(0, 0, 0, .8);
   --theme-background: #fff;
   --theme-icon: none;
+
   background: var(--theme-background) linear-gradient(180deg, transparent, transparent 80%, rgba(0, 0, 0, .1) 100%);
   border: 1px solid rgba(0, 0, 0, .1);
   border-radius: .25em;
@@ -34,7 +35,7 @@
     content: var(--theme-icon);
     float: left;
     font-size: 1.5em;
-    line-height: 0.8em;
+    line-height: .8em;
     margin-left: -.1em;
     min-width: 1.5em;
     padding-right: .25em;
