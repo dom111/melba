@@ -1,7 +1,7 @@
 {
   "name": "melba-toast",
   "description": "Lightweight VanillaJS toast library.",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "main": "dist/cjs/Melba.js",
   "module": "dist/esm/Melba.js",
   "style": "dist/css/Melba-min.css",
