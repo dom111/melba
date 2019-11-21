@@ -68,7 +68,14 @@
     }],
     "space-in-parens": ["error", "never"],
     "space-infix-ops": "error",
-    "space-unary-ops": "error",
+    "space-unary-ops": ["warn", {
+      "words": true,
+      "nonwords": false,
+      "overrides": {
+        "!": true,
+        "!!": true
+      }
+    }],
     "template-curly-spacing": "error"
   }
 }

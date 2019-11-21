@@ -1,6 +1,26 @@
 /**
  * Melba - lightweight, accessible, VanillaJS toast library.
  */
+// IE11 support
+const [matchesFunction] = (() => {
+    const element = document.createElement('a');
+
+    return ['matches', 'msMatchesSelector', 'webkitMatchesSelector'].filter((property) => property in element);
+  })(),
+  focusedSelector = (() => {
+    const element = document.createElement('a');
+
+    try {
+      element[matchesFunction](':focus-within');
+
+      return ':focus-within, :focus, :hover';
+    }
+    catch (e) {
+      return ':focus, :hover';
+    }
+  })()
+;
+
 export default class Melba {
   /**
    * #defaults
@@ -103,7 +123,7 @@ export default class Melba {
     toastShowClass = Melba.#defaults.toastShowClass,
     type = Melba.#defaults.toastType
   }) {
-    if (!content) {
+    if (! content) {
       throw new TypeError('\'content\' cannot be empty.');
     }
 
@@ -112,7 +132,7 @@ export default class Melba {
     this.#toastHideClass = toastHideClass;
     this.#toastShowClass = toastShowClass;
 
-    if (!container) {
+    if (! container) {
       container = this.getContainer({containerClass, containerElement, root});
     }
 
@@ -167,7 +187,7 @@ export default class Melba {
     this.#element.appendChild(document.createTextNode(content));
 
     this.#element.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape') {
+      if (event.which === 27) { // if (event.key === 'Escape') {
         event.preventDefault();
 
         this.hide();
@@ -193,11 +213,12 @@ export default class Melba {
   }
 
   hide(force = false) {
-    if (!force && this.#hasFocus) {
+    if (! force && this.#hasFocus) {
       return;
     }
 
-    if (!force && this.#element.matches(':focus-within, :focus, :hover')) {
+    // polyfill .matches in IE11
+    if (! force && this.#element[matchesFunction](focusedSelector)) {
       this.#element.addEventListener('mouseout', () => {
         this.#hasFocus = false;
 
@@ -230,7 +251,7 @@ export default class Melba {
             return;
           }
 
-          bound = !this.#element.addEventListener('transitionend', transitionEndHandler);
+          bound = ! this.#element.addEventListener('transitionend', transitionEndHandler);
         },
         transitionEndHandler = () => {
           this.remove();
@@ -285,7 +306,7 @@ export default class Melba {
   }
 
   on(event, callable) {
-    if (!this.#events[event]) {
+    if (! this.#events[event]) {
       this.#events[event] = [];
     }
 
@@ -293,7 +314,7 @@ export default class Melba {
   }
 
   off(event, callable = null) {
-    if (!callable) {
+    if (! callable) {
       return this.#events[event] = [];
     }
 

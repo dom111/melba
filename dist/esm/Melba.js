@@ -4,6 +4,7 @@ import _classCallCheck from "@babel/runtime/helpers/classCallCheck";
 import _createClass from "@babel/runtime/helpers/createClass";
 import _classPrivateFieldGet from "@babel/runtime/helpers/classPrivateFieldGet";
 import _classPrivateFieldSet from "@babel/runtime/helpers/classPrivateFieldSet";
+import _slicedToArray from "@babel/runtime/helpers/slicedToArray";
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
@@ -16,6 +17,15 @@ function _classStaticPrivateFieldSpecGet(receiver, classConstructor, descriptor)
 /**
  * Melba - lightweight, accessible, VanillaJS toast library.
  */
+var _filter = ['matches', 'msMatchesSelector', 'webkitMatchesSelector'].filter(function () {
+  var element = document.createElement('a');
+  return function (property) {
+    return property in element;
+  };
+}()),
+    _filter2 = _slicedToArray(_filter, 1),
+    matchesFunction = _filter2[0];
+
 var Melba =
 /*#__PURE__*/
 function () {
@@ -294,9 +304,10 @@ function () {
 
       if (!force && _classPrivateFieldGet(this, _hasFocus)) {
         return;
-      }
+      } // polyfill .matches in IE11
 
-      if (!force && _classPrivateFieldGet(this, _element).matches(':focus-within, :focus, :hover')) {
+
+      if (!force && _classPrivateFieldGet(this, _element)[matchesFunction](':focus-within, :focus, :hover')) {
         _classPrivateFieldGet(this, _element).addEventListener('mouseout', function () {
           _classPrivateFieldSet(_this4, _hasFocus, false);
 

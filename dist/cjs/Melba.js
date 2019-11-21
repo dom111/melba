@@ -19,6 +19,8 @@ var _classPrivateFieldGet2 = _interopRequireDefault(require("@babel/runtime/help
 
 var _classPrivateFieldSet2 = _interopRequireDefault(require("@babel/runtime/helpers/classPrivateFieldSet"));
 
+var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
+
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { (0, _defineProperty2["default"])(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
@@ -30,6 +32,15 @@ function _classStaticPrivateFieldSpecGet(receiver, classConstructor, descriptor)
 /**
  * Melba - lightweight, accessible, VanillaJS toast library.
  */
+var _filter = ['matches', 'msMatchesSelector', 'webkitMatchesSelector'].filter(function () {
+  var element = document.createElement('a');
+  return function (property) {
+    return property in element;
+  };
+}()),
+    _filter2 = (0, _slicedToArray2["default"])(_filter, 1),
+    matchesFunction = _filter2[0];
+
 var Melba =
 /*#__PURE__*/
 function () {
@@ -290,9 +301,10 @@ function () {
 
       if (!force && (0, _classPrivateFieldGet2["default"])(this, _hasFocus)) {
         return;
-      }
+      } // polyfill .matches in IE11
 
-      if (!force && (0, _classPrivateFieldGet2["default"])(this, _element).matches(':focus-within, :focus, :hover')) {
+
+      if (!force && (0, _classPrivateFieldGet2["default"])(this, _element)[matchesFunction](':focus-within, :focus, :hover')) {
         (0, _classPrivateFieldGet2["default"])(this, _element).addEventListener('mouseout', function () {
           (0, _classPrivateFieldSet2["default"])(_this4, _hasFocus, false);
 
