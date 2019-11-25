@@ -24,7 +24,8 @@
     "build:esm": "cross-env BABEL_ENV=esm babel src --out-dir dist/esm/ --ignore \"src/**/*.test.js\"",
     "build:cjs": "cross-env BABEL_ENV=cjs babel src --out-dir dist/cjs/ --ignore \"src/**/*.test.js\"",
     "build:css": "node-sass --output-style=compressed src/Melba.scss -o dist/css/",
-    "lint": "eslint src --fix && stylelint src --fix"
+    "lint": "eslint src && stylelint src",
+    "lint:fix": "eslint src --fix && stylelint src --fix"
   },
   "devDependencies": {
     "@babel/cli": "^7.6.3",
