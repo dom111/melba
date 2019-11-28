@@ -32,14 +32,25 @@ function _classStaticPrivateFieldSpecGet(receiver, classConstructor, descriptor)
 /**
  * Melba - lightweight, accessible, VanillaJS toast library.
  */
-var _filter = ['matches', 'msMatchesSelector', 'webkitMatchesSelector'].filter(function () {
+// IE11 support
+var _ref = function () {
   var element = document.createElement('a');
-  return function (property) {
+  return ['matches', 'msMatchesSelector', 'webkitMatchesSelector'].filter(function (property) {
     return property in element;
-  };
-}()),
-    _filter2 = (0, _slicedToArray2["default"])(_filter, 1),
-    matchesFunction = _filter2[0];
+  });
+}(),
+    _ref2 = (0, _slicedToArray2["default"])(_ref, 1),
+    matchesFunction = _ref2[0],
+    focusedSelector = function () {
+  var element = document.createElement('a');
+
+  try {
+    element[matchesFunction](':focus-within');
+    return ':focus-within, :focus, :hover';
+  } catch (e) {
+    return ':focus, :hover';
+  }
+}();
 
 var Melba =
 /*#__PURE__*/
@@ -102,40 +113,40 @@ function () {
    * @param toastShowClass string Optional. Used to override the `#defaults`.
    * @param type string Optional. Used to override the `#defaults`.
    */
-  function Melba(_ref) {
+  function Melba(_ref3) {
     var _this = this;
 
-    var _ref$animation = _ref.animation,
-        animation = _ref$animation === void 0 ? _classStaticPrivateFieldSpecGet(Melba, Melba, _defaults).animation : _ref$animation,
-        _ref$animationDuratio = _ref.animationDuration,
-        animationDuration = _ref$animationDuratio === void 0 ? _classStaticPrivateFieldSpecGet(Melba, Melba, _defaults).animationDuration : _ref$animationDuratio,
-        _ref$closeLabel = _ref.closeLabel,
-        closeLabel = _ref$closeLabel === void 0 ? _classStaticPrivateFieldSpecGet(Melba, Melba, _defaults).closeLabel : _ref$closeLabel,
-        _ref$container = _ref.container,
-        container = _ref$container === void 0 ? null : _ref$container,
-        _ref$containerClass = _ref.containerClass,
-        containerClass = _ref$containerClass === void 0 ? _classStaticPrivateFieldSpecGet(Melba, Melba, _defaults).containerClass : _ref$containerClass,
-        _ref$containerElement = _ref.containerElement,
-        containerElement = _ref$containerElement === void 0 ? _classStaticPrivateFieldSpecGet(Melba, Melba, _defaults).containerElement : _ref$containerElement,
-        content = _ref.content,
-        _ref$events = _ref.events,
-        events = _ref$events === void 0 ? {} : _ref$events,
-        _ref$hide = _ref.hide,
-        hide = _ref$hide === void 0 ? _classStaticPrivateFieldSpecGet(Melba, Melba, _defaults).hide : _ref$hide,
-        _ref$root = _ref.root,
-        root = _ref$root === void 0 ? _classStaticPrivateFieldSpecGet(Melba, Melba, _defaults).root : _ref$root,
-        _ref$toastClass = _ref.toastClass,
-        toastClass = _ref$toastClass === void 0 ? _classStaticPrivateFieldSpecGet(Melba, Melba, _defaults).toastClass : _ref$toastClass,
-        _ref$toastElement = _ref.toastElement,
-        toastElement = _ref$toastElement === void 0 ? _classStaticPrivateFieldSpecGet(Melba, Melba, _defaults).toastElement : _ref$toastElement,
-        _ref$toastEvents = _ref.toastEvents,
-        toastEvents = _ref$toastEvents === void 0 ? (0, _toConsumableArray2["default"])(_classStaticPrivateFieldSpecGet(Melba, Melba, _defaults).toastEvents) : _ref$toastEvents,
-        _ref$toastHideClass = _ref.toastHideClass,
-        toastHideClass = _ref$toastHideClass === void 0 ? _classStaticPrivateFieldSpecGet(Melba, Melba, _defaults).toastHideClass : _ref$toastHideClass,
-        _ref$toastShowClass = _ref.toastShowClass,
-        toastShowClass = _ref$toastShowClass === void 0 ? _classStaticPrivateFieldSpecGet(Melba, Melba, _defaults).toastShowClass : _ref$toastShowClass,
-        _ref$type = _ref.type,
-        type = _ref$type === void 0 ? _classStaticPrivateFieldSpecGet(Melba, Melba, _defaults).toastType : _ref$type;
+    var _ref3$animation = _ref3.animation,
+        animation = _ref3$animation === void 0 ? _classStaticPrivateFieldSpecGet(Melba, Melba, _defaults).animation : _ref3$animation,
+        _ref3$animationDurati = _ref3.animationDuration,
+        animationDuration = _ref3$animationDurati === void 0 ? _classStaticPrivateFieldSpecGet(Melba, Melba, _defaults).animationDuration : _ref3$animationDurati,
+        _ref3$closeLabel = _ref3.closeLabel,
+        closeLabel = _ref3$closeLabel === void 0 ? _classStaticPrivateFieldSpecGet(Melba, Melba, _defaults).closeLabel : _ref3$closeLabel,
+        _ref3$container = _ref3.container,
+        container = _ref3$container === void 0 ? null : _ref3$container,
+        _ref3$containerClass = _ref3.containerClass,
+        containerClass = _ref3$containerClass === void 0 ? _classStaticPrivateFieldSpecGet(Melba, Melba, _defaults).containerClass : _ref3$containerClass,
+        _ref3$containerElemen = _ref3.containerElement,
+        containerElement = _ref3$containerElemen === void 0 ? _classStaticPrivateFieldSpecGet(Melba, Melba, _defaults).containerElement : _ref3$containerElemen,
+        content = _ref3.content,
+        _ref3$events = _ref3.events,
+        events = _ref3$events === void 0 ? {} : _ref3$events,
+        _ref3$hide = _ref3.hide,
+        hide = _ref3$hide === void 0 ? _classStaticPrivateFieldSpecGet(Melba, Melba, _defaults).hide : _ref3$hide,
+        _ref3$root = _ref3.root,
+        root = _ref3$root === void 0 ? _classStaticPrivateFieldSpecGet(Melba, Melba, _defaults).root : _ref3$root,
+        _ref3$toastClass = _ref3.toastClass,
+        toastClass = _ref3$toastClass === void 0 ? _classStaticPrivateFieldSpecGet(Melba, Melba, _defaults).toastClass : _ref3$toastClass,
+        _ref3$toastElement = _ref3.toastElement,
+        toastElement = _ref3$toastElement === void 0 ? _classStaticPrivateFieldSpecGet(Melba, Melba, _defaults).toastElement : _ref3$toastElement,
+        _ref3$toastEvents = _ref3.toastEvents,
+        toastEvents = _ref3$toastEvents === void 0 ? (0, _toConsumableArray2["default"])(_classStaticPrivateFieldSpecGet(Melba, Melba, _defaults).toastEvents) : _ref3$toastEvents,
+        _ref3$toastHideClass = _ref3.toastHideClass,
+        toastHideClass = _ref3$toastHideClass === void 0 ? _classStaticPrivateFieldSpecGet(Melba, Melba, _defaults).toastHideClass : _ref3$toastHideClass,
+        _ref3$toastShowClass = _ref3.toastShowClass,
+        toastShowClass = _ref3$toastShowClass === void 0 ? _classStaticPrivateFieldSpecGet(Melba, Melba, _defaults).toastShowClass : _ref3$toastShowClass,
+        _ref3$type = _ref3.type,
+        type = _ref3$type === void 0 ? _classStaticPrivateFieldSpecGet(Melba, Melba, _defaults).toastType : _ref3$type;
     (0, _classCallCheck2["default"])(this, Melba);
 
     _animation.set(this, {
@@ -239,10 +250,10 @@ function () {
 
   (0, _createClass2["default"])(Melba, [{
     key: "autohide",
-    value: function autohide(_ref2) {
+    value: function autohide(_ref4) {
       var _this2 = this;
 
-      var animationDuration = _ref2.animationDuration;
+      var animationDuration = _ref4.animationDuration;
       window.setTimeout(function () {
         (0, _classPrivateFieldSet2["default"])(_this2, _hide, true);
 
@@ -251,15 +262,15 @@ function () {
     }
   }, {
     key: "build",
-    value: function build(_ref3) {
+    value: function build(_ref5) {
       var _this3 = this;
 
-      var closeLabel = _ref3.closeLabel,
-          content = _ref3.content,
-          toastClass = _ref3.toastClass,
-          toastElement = _ref3.toastElement,
-          toastEvents = _ref3.toastEvents,
-          type = _ref3.type;
+      var closeLabel = _ref5.closeLabel,
+          content = _ref5.content,
+          toastClass = _ref5.toastClass,
+          toastElement = _ref5.toastElement,
+          toastEvents = _ref5.toastEvents,
+          type = _ref5.type;
       (0, _classPrivateFieldSet2["default"])(this, _element, document.createElement(toastElement));
       (0, _classPrivateFieldGet2["default"])(this, _element).setAttribute('title', content);
       (0, _classPrivateFieldGet2["default"])(this, _element).setAttribute('role', 'status'); // for screen readers
@@ -271,7 +282,8 @@ function () {
       (0, _classPrivateFieldGet2["default"])(this, _element).appendChild(this.buildClose(closeLabel));
       (0, _classPrivateFieldGet2["default"])(this, _element).appendChild(document.createTextNode(content));
       (0, _classPrivateFieldGet2["default"])(this, _element).addEventListener('keydown', function (event) {
-        if (event.key === 'Escape') {
+        if (event.which === 27) {
+          // if (event.key === 'Escape') {
           event.preventDefault();
 
           _this3.hide();
@@ -304,7 +316,7 @@ function () {
       } // polyfill .matches in IE11
 
 
-      if (!force && (0, _classPrivateFieldGet2["default"])(this, _element)[matchesFunction](':focus-within, :focus, :hover')) {
+      if (!force && (0, _classPrivateFieldGet2["default"])(this, _element)[matchesFunction](focusedSelector)) {
         (0, _classPrivateFieldGet2["default"])(this, _element).addEventListener('mouseout', function () {
           (0, _classPrivateFieldSet2["default"])(_this4, _hasFocus, false);
 
@@ -373,10 +385,10 @@ function () {
     }
   }, {
     key: "getContainer",
-    value: function getContainer(_ref4) {
-      var containerClass = _ref4.containerClass,
-          containerElement = _ref4.containerElement,
-          root = _ref4.root;
+    value: function getContainer(_ref6) {
+      var containerClass = _ref6.containerClass,
+          containerElement = _ref6.containerElement,
+          root = _ref6.root;
       var existingContainer = root.querySelector("".concat(containerElement, ".").concat(containerClass));
 
       if (existingContainer) {
