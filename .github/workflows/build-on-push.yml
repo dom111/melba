@@ -14,6 +14,6 @@ jobs:
       - run: yarn build
 
       - name: Commit changes
-        uses: elstudio/actions-js-build@v2-beta
+        uses: elstudio/actions-js-build/commit@v2-beta
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
