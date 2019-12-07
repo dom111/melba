@@ -21,6 +21,8 @@ const [matchesFunction] = (() => {
   })()
 ;
 
+export const change = () => change;
+
 export default class Melba {
   /**
    * #defaults
