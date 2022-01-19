@@ -1,3 +1,19 @@
+# 2.0.0
+
+- Converted to TypeScript
+- Removed mjs and cjs versions in favour of `.d.ts` file
+
+
+# 1.0.0
+
+Improved IE11 support
+
+
+# 0.2.3
+
+Remove reliance on CSS Custom Properties (IE11 support)
+
+
 # 0.2.0
 
 Ditch webpack in favour of using `babel` directly.

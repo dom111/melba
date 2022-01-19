@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="../dist/Melba-min.css"/>
+<link rel="stylesheet" href="../dist/Melba.css"/>
 
 <h2>To use:</h2>
 
@@ -53,6 +53,13 @@ then:
 </ul>
 
 <script>
+  var module = {
+    exports: {}
+  },
+  exports = module.exports;
+
+  var Melba;
+
   document.addEventListener('DOMContentLoaded', function() {
       document.querySelector('button.success').addEventListener('click', function() {
           new Melba({
@@ -116,11 +123,9 @@ then:
           // });
       });
   });
+
+  window.addEventListener('load', function() {
+    Melba = module.exports.Melba;
+  });
 </script>
-<script src="../dist/Melba-min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/css-vars-ponyfill@2.1.2/dist/css-vars-ponyfill.min.js"></script>
-<script type="text/javascript">
-  if (!(window.CSS && CSS.supports('color', 'var(--fake-var)'))) {
-    cssVars();
-  }
-</script>
+<script src="../dist/Melba.js"></script>
