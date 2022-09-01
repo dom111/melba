@@ -1,0 +1,1 @@
+{"version":3,"file":"supportsFocusWithin.js","sourceRoot":"","sources":["../../src/lib/supportsFocusWithin.ts"],"names":[],"mappings":";;;AAAa,QAAA,mBAAmB,GAAY,CAAC,GAAG,EAAE;IAChD,IAAI;QACF,QAAQ,CAAC,aAAa,CAAC,eAAe,CAAC,CAAC;QAExC,OAAO,IAAI,CAAC;KACb;IAAC,OAAO,CAAC,EAAE;QACV,OAAO,KAAK,CAAC;KACd;AACH,CAAC,CAAC,EAAE,CAAC;AAEL,kBAAe,2BAAmB,CAAC"}
