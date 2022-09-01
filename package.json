@@ -1,11 +1,13 @@
 {
   "name": "melba-toast",
   "description": "Lightweight VanillaJS toast library.",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "main": "dist/Melba.js",
+  "types": "src/Melba.ts",
   "style": "dist/Melba.css",
   "files": [
-    "dist"
+    "dist",
+    "src"
   ],
   "repository": {
     "type": "git",
@@ -20,17 +22,21 @@
   "license": "MIT",
   "scripts": {
     "build": "npm run build:prettier && npm run build:typescript && npm run build:minify && npm run build:sass",
+    "build:esbuild": "node esbuild.mjs",
     "build:minify": "terser dist/Melba.js --source-map \"content='dist/Melba.js.map'\" -o dist/Melba.js",
-    "build:typescript": "tsc -p ./tsconfig.json --outDir dist",
     "build:prettier": "prettier src/**/* -w",
+    "build:typescript": "tsc -p ./tsconfig.json --outDir dist",
     "build:sass": "sass src/Melba.scss:dist/Melba.css --source-map --style=compressed"
   },
   "devDependencies": {
+    "esbuild": "^0.15.6",
+    "esbuild-sass-plugin": "^2.3.2",
     "prettier": "^2.5.1",
     "sass": "^1.49.0",
+    "terser": "^5.10.0",
     "typescript": "^4.5.4"
   },
   "dependencies": {
-    "terser": "^5.10.0"
+    "@dom111/typed-event-emitter": "^0.1.1"
   }
 }

@@ -1,3 +1,9 @@
+# 3.0.0
+
+- Removed IE11 support.
+- Altered API slightly and exposed `toast`, `error`, `info`, `success` and `warning` functions.
+- Bundle with esbuild.
+
 # 2.0.0
 
 - Converted to TypeScript

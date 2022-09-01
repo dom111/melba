@@ -1,38 +1,33 @@
 /**
  * Melba - lightweight, accessible, VanillaJS toast library.
  */
+import EventEmitter from '@dom111/typed-event-emitter/EventEmitter';
+import supportsFocusWithin from "./lib/supportsFocusWithin";
 
-type MatchesFunction =
-  | 'matches'
-  | 'msMatchesSelector'
-  | 'webkitMatchesSelector';
+type MelbaEventMap = {
+  build: [];
+  hide: [];
+  remove: [];
+  show: [];
+};
+type MelbaEventHandler<K extends keyof MelbaEventMap> = (
+  ...args: MelbaEventMap[K]
+) => void;
+type MelbaEventContainer = {
+  [K in keyof MelbaEventMap]?: MelbaEventHandler<K>[];
+};
+type MelbaConstructorOptions = MelbaOptions & {
+  container?: HTMLElement | null;
+  events?: MelbaEventContainer;
+  type?: MelbaType;
+};
 
-// IE11 support
-const [matchesFunction] = ((): MatchesFunction[] => {
-    const element = document.createElement('a');
+type MelbaType = 'error' | 'info' | 'success' | 'warning';
 
-    return (
-      [
-        'matches',
-        'msMatchesSelector',
-        'webkitMatchesSelector',
-      ] as MatchesFunction[]
-    ).filter((property: MatchesFunction): boolean => property in element);
-  })(),
-  focusedSelector = ((): string => {
-    const element = document.createElement('a');
-
-    try {
-      element[matchesFunction](':focus-within');
-
-      return ':focus-within, :focus, :hover';
-    } catch (e) {
-      return ':focus, :hover';
-    }
-  })();
 export type MelbaOptions = {
   animation?: boolean;
   animationDuration?: number;
+  autoShow?: boolean;
   containerClass?: string;
   containerElement?: string;
   closeLabel?: string;
@@ -41,33 +36,12 @@ export type MelbaOptions = {
   root?: HTMLElement | null;
   toastClass?: string;
   toastElement?: string;
-  toastEvents?: MelbaDOMEvent[];
   toastHideClass?: string;
   toastShowClass?: string;
-  toastType?: MelbaType;
-};
-
-export type MelbaDOMEvent = 'click' | 'focus' | 'keydown';
-export type MelbaEvent = MelbaDOMEvent | 'build' | 'hide' | 'remove' | 'show';
-
-export type MelbaEventContainer = { [K in MelbaEvent]?: MelbaEventHandler[] };
-
-export type MelbaConstructorOptions = MelbaOptions & {
-  container?: HTMLElement | null;
-  content: string;
-  events?: MelbaEventContainer;
   type?: MelbaType;
 };
 
-export type MelbaType = 'info' | 'error' | 'warning' | 'success';
-
-export type MelbaEventHandler = (
-  toast: Melba,
-  element: HTMLElement,
-  ...args: any[]
-) => void;
-
-export class Melba {
+export class Melba extends EventEmitter<MelbaEventMap> {
   /**
    * #defaults
    *
@@ -75,6 +49,7 @@ export class Melba {
    *
    * - `animation` - Whether or not the element is animated with CSS.
    * - `animationDuration` - The duration of the CSS animation.
+   * - `autoShow` - If the toast should be automatically shown when instantiated. Defaults to `true`.
    * - `containerClass` - The `className` applied to the container element.
    * - `containerElement` - The element type used for the container.
    * - `closeLabel` - The text label for the close button.
@@ -87,13 +62,14 @@ export class Melba {
    * - `toastEvents` - The DOM events to expose for toasts.
    * - `toastHideClass` - The `className` applied to the toast to hide.
    * - `toastShowClass` - The `className` applied to the toast to show.
-   * - `toastType` - The type of the toast, this will be added as a `className` like `toast--${type}`.
+   * - `type` - The type of the toast, this will be added as a `className` like `toast--${type}`.
    *
    * @type {MelbaOptions}
    */
   private static defaults: MelbaOptions = {
     animation: true,
     animationDuration: 400,
+    autoShow: true,
     closeLabel: 'Close', // TODO: i18n
     containerClass: 'toast__container',
     containerElement: 'div',
@@ -102,13 +78,13 @@ export class Melba {
     root: document.body,
     toastClass: 'toast',
     toastElement: 'div',
-    toastEvents: ['click', 'focus', 'keydown'],
     toastHideClass: 'toast--hide',
     toastShowClass: 'toast--show',
-    toastType: 'info',
+    type: 'info',
   };
 
   private animation: boolean;
+  private autoShow: boolean;
   private container: HTMLElement;
   private element: HTMLElement;
   private events: MelbaEventContainer;
@@ -131,29 +107,31 @@ export class Melba {
    * @param root {HTMLElement} Optional. Used to override the `defaults`.
    * @param toastClass {string} Optional. Used to override the `defaults`.
    * @param toastElement {string} Optional. Used to override the `defaults`.
-   * @param toastEvents {MelbaDOMEvent[]} Optional. Used to override the `defaults`.
    * @param toastHideClass {string} Optional. Used to override the `defaults`.
    * @param toastShowClass {string} Optional. Used to override the `defaults`.
    * @param type {string} Optional. Used to override the `defaults`.
    */
-  constructor({
-    animation = Melba.defaults.animation,
-    animationDuration = Melba.defaults.animationDuration,
-    closeLabel = Melba.defaults.closeLabel,
-    container = null,
-    containerClass = Melba.defaults.containerClass,
-    containerElement = Melba.defaults.containerElement,
-    content,
-    events = {},
-    hide = Melba.defaults.hide,
-    root = Melba.defaults.root,
-    toastClass = Melba.defaults.toastClass,
-    toastElement = Melba.defaults.toastElement,
-    toastEvents = [...Melba.defaults.toastEvents],
-    toastHideClass = Melba.defaults.toastHideClass,
-    toastShowClass = Melba.defaults.toastShowClass,
-    type = Melba.defaults.toastType,
-  }: MelbaConstructorOptions) {
+  constructor(
+    content: string,
+    {
+      animation = Melba.defaults.animation,
+      animationDuration = Melba.defaults.animationDuration,
+      closeLabel = Melba.defaults.closeLabel,
+      container = null,
+      containerClass = Melba.defaults.containerClass,
+      containerElement = Melba.defaults.containerElement,
+      events = {},
+      hide = Melba.defaults.hide,
+      root = Melba.defaults.root,
+      toastClass = Melba.defaults.toastClass,
+      toastElement = Melba.defaults.toastElement,
+      toastHideClass = Melba.defaults.toastHideClass,
+      toastShowClass = Melba.defaults.toastShowClass,
+      type = Melba.defaults.type,
+    }: MelbaConstructorOptions
+  ) {
+    super();
+
     if (!content) {
       throw new TypeError("'content' cannot be empty.");
     }
@@ -189,12 +167,11 @@ export class Melba {
       content,
       toastClass,
       toastElement,
-      toastEvents,
       type,
     });
 
     if (this.hideDelay !== false) {
-      this.autohide({ animationDuration });
+      this.autoHide(animationDuration);
     }
 
     if (this.animation) {
@@ -203,14 +180,12 @@ export class Melba {
       return;
     }
 
-    this.show();
+    if (this.autoShow) {
+      this.show();
+    }
   }
 
-  private autohide({
-    animationDuration,
-  }: {
-    animationDuration: number;
-  }): number {
+  private autoHide(animationDuration: number): number {
     if (!this.hideDelay) {
       return;
     }
@@ -226,14 +201,12 @@ export class Melba {
     content,
     toastClass,
     toastElement,
-    toastEvents,
     type,
   }: {
     closeLabel: string;
     content: string;
     toastClass: string;
     toastElement: string;
-    toastEvents: MelbaDOMEvent[];
     type: string;
   }): void {
     this.element = document.createElement(toastElement);
@@ -254,22 +227,16 @@ export class Melba {
       }
     });
 
-    toastEvents.forEach((eventName) => {
-      this.element.addEventListener(eventName, (event) => {
-        this.trigger(eventName, event);
-      });
-    });
-
     this.container.appendChild(this.element);
 
-    this.trigger('build');
+    this.emit('build');
   }
 
   show(): void {
     this.element.classList.remove(this.toastHideClass);
     this.element.classList.add(this.toastShowClass);
 
-    this.trigger('show');
+    this.emit('show');
   }
 
   hide(force: boolean = false): void {
@@ -277,8 +244,9 @@ export class Melba {
       return;
     }
 
-    // polyfill .matches in IE11
-    if (!force && this.element[matchesFunction](focusedSelector)) {
+    const focusSelector = (supportsFocusWithin ? ':focus-within, ' : '') + ':focus, :hover';
+
+    if (!force && this.element.matches(focusSelector)) {
       this.element.addEventListener('mouseout', () => {
         this.hasFocus = false;
 
@@ -291,7 +259,7 @@ export class Melba {
     this.element.classList.remove(this.toastShowClass);
     this.element.classList.add(this.toastHideClass);
 
-    this.trigger('hide');
+    this.emit('hide');
 
     // if we're animating there's a chance that the toast could be focused whilst it's disappearing. This prevents a
     // `:hover`ed or `:focus`ed toast from being hidden and removed.
@@ -341,7 +309,7 @@ export class Melba {
     if (this.element.parentNode === this.container) {
       this.container.removeChild(this.element);
 
-      this.trigger('remove');
+      this.emit('remove');
     }
   }
 
@@ -380,32 +348,8 @@ export class Melba {
     return container;
   }
 
-  on(event: MelbaEvent, callable: MelbaEventHandler) {
-    if (!this.events[event]) {
-      this.events[event] = [];
-    }
-
-    this.events[event].push(callable);
-  }
-
-  off(event: MelbaEvent, callable: MelbaEventHandler | null = null): void {
-    if (!callable) {
-      this.events[event] = [];
-
-      return;
-    }
-
-    const hasEvent = this.events[event].indexOf(callable);
-
-    if (hasEvent === -1) {
-      this.events[event].splice(hasEvent, 1);
-    }
-  }
-
-  trigger(event: MelbaEvent, ...args: any[]) {
-    (this.events[event] || []).forEach((callable: MelbaEventHandler): void =>
-      callable(this, this.element, ...args)
-    );
+  getElement(): HTMLElement {
+    return this.element;
   }
 
   /**
@@ -420,5 +364,36 @@ export class Melba {
     };
   }
 }
+
+export const toast = (content: string, options: MelbaOptions = {}): Melba =>
+  new Melba(content, {
+    ...options,
+    autoShow: true,
+  });
+
+export const error = (content: string, options: MelbaOptions = {}): Melba =>
+  toast(content, {
+    ...options,
+    type: 'error',
+  });
+
+export const info = (content: string, options: MelbaOptions = {}): Melba =>
+  toast(content, {
+    ...options,
+    type: 'info',
+  });
+
+export const success = (content: string, options: MelbaOptions = {}): Melba =>
+  toast(content, {
+    ...options,
+    type: 'success',
+    hide: true,
+  });
+
+export const warning = (content: string, options: MelbaOptions = {}): Melba =>
+  toast(content, {
+    ...options,
+    type: 'warning',
+  });
 
 export default Melba;

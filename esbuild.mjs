@@ -1,18 +1,19 @@
-const { build } = require('esbuild'),
-  { Prettier } = require('esbuild-plugin-prettier'),
-  { sassPlugin } = require('esbuild-sass-plugin'),
-  buildOptions = {
+import { build } from 'esbuild';
+import { sassPlugin } from "esbuild-sass-plugin";
+
+const buildOptions = {
     entryPoints: [
+      'src/Melba.ts',
       'src/Melba.scss',
     ],
     bundle: true,
+    format: 'cjs',
     minify: true,
     sourcemap: true,
     watch: false,
     outdir: 'dist',
     plugins: [
       sassPlugin(),
-      new Prettier(),
     ],
     entryNames: '[dir]/[name]',
   };
